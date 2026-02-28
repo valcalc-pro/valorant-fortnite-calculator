@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Collection Value Calculator | Valorant & Fortnite</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+    <h1>GAME COLLECTION CALCULATOR</h1>
+    <p>Professional Valuation Tool for Gamers</p>
+    <div class="game-switch">
+        <button onclick="switchGame('valorant')" id="btn-val" class="active">VALORANT</button>
+        <button onclick="switchGame('fortnite')" id="btn-fn">FORTNITE</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="valorant-calc">
+        <h2 class="section-title">Account Details</h2>
+        <div class="input-grid">
+            <div>
+                <label>Account Level</label>
+                <input id="level" type="number" min="0" value="0">
+            </div>
+            <div>
+                <label>Competitive Rank</label>
+                <select id="rank" onchange="updateRankColor()">
+                    <option value="1">Unranked</option>
+                    <option value="1.02">Iron 1</option><option value="1.04">Iron 2</option><option value="1.06">Iron 3</option>
+                    <option value="1.08">Bronze 1</option><option value="1.10">Bronze 2</option><option value="1.12">Bronze 3</option>
+                    <option value="1.15">Silver 1</option><option value="1.18">Silver 2</option><option value="1.21">Silver 3</option>
+                    <option value="1.25">Gold 1</option><option value="1.28">Gold 2</option><option value="1.32">Gold 3</option>
+                    <option value="1.40">Platinum 1</option><option value="1.45">Platinum 2</option><option value="1.50">Platinum 3</option>
+                    <option value="1.65">Diamond 1</option><option value="1.75">Diamond 2</option><option value="1.85">Diamond 3</option>
+                    <option value="2.10">Ascendant 1</option><option value="2.25">Ascendant 2</option><option value="2.40">Ascendant 3</option>
+                    <option value="2.80">Immortal 1</option><option value="3.10">Immortal 2</option><option value="3.50">Immortal 3</option>
+                    <option value="4.50">Radiant</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-grid">
+            <div><label>Agents Unlocked</label><input id="agents" type="number" value="0"></div>
+            <div><label>VP Balance</label><input id="vp" type="number" value="0"></div>
+        </div>
+
+        <div class="input-grid">
+            <div><label>Radianite Points (RP)</label><input id="rp" type="number" value="0"></div>
+            <div><label>Kingdom Credits (KC)</label><input id="kc" type="number" value="0"></div>
+        </div>
+
+        <h2 class="section-title">Weapon Skin Inventory</h2>
+        <div class="skin-grid">
+            <div><label>Select Edition</label><input id="select" type="number" value="0"></div>
+            <div><label>Deluxe Edition</label><input id="deluxe" type="number" value="0"></div>
+            <div><label>Premium Edition</label><input id="premium" type="number" value="0"></div>
+            <div><label>Exclusive Edition</label><input id="exclusive" type="number" value="0"></div>
+            <div><label>Ultra Edition</label><input id="ultra" type="number" value="0"></div>
+            <div><label>Battle Pass Skins</label><input id="bp" type="number" value="0"></div>
+        </div>
+        
+        <h3>Rare Collectibles & Limited Items</h3>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="50" class="val-rare"> Riot Gun Buddy</label>
+            <label><input type="checkbox" value="40" class="val-rare"> Arcane Sheriff</label>
+            <label><input type="checkbox" value="35" class="val-rare"> Champions 2021 Vandal</label>
+            <label><input type="checkbox" value="35" class="val-rare"> Champions 2022 Phantom</label>
+            <label><input type="checkbox" value="30" class="val-rare"> Ignite Fan (China)</label>
+            <label><input type="checkbox" value="25" class="val-rare"> VCT LOCK//IN Misericórdia</label>
+        </div>
+    </div>
+
+    <div id="fortnite-calc" style="display: none;">
+        <h2 class="section-title">Locker Summary</h2>
+        <div class="input-grid">
+            <div><label>Total Skins</label><input id="fn-skins" type="number" value="0"></div>
+            <div><label>Total Pickaxes</label><input id="fn-axes" type="number" value="0"></div>
+        </div>
+        <div class="input-grid">
+            <div><label>Total Emotes</label><input id="fn-emotes" type="number" value="0"></div>
+            <div><label>V-Bucks Balance</label><input id="fn-vbucks" type="number" value="0"></div>
+        </div>
+
+        <h3>Ultra Rare & OG Skins</h3>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="180" class="fn-rare"> Renegade Raider</label>
+            <label><input type="checkbox" value="100" class="fn-rare"> OG Pink Ghoul Trooper</label>
+            <label><input type="checkbox" value="90" class="fn-rare"> Aerial Assault Trooper</label>
+            <label><input type="checkbox" value="60" class="fn-rare"> Black Knight (S2)</label>
+            <label><input type="checkbox" value="45" class="fn-rare"> Ikonik Skin</label>
+            <label><input type="checkbox" value="40" class="fn-rare"> Galaxy Skin</label>
+        </div>
+    </div>
+
+    <label>Account Region</label>
+    <select id="region">
+        <option value="1">Global / Europe / NA (Standard)</option>
+        <option value="0.75">Turkey / Brazil / Asia (Discounted)</option>
+    </select>
+
+    <button onclick="calculate()" class="calc-btn">CALCULATE ACCOUNT VALUE</button>
+
+    <div id="results-area">
+        <h2 id="result-label">Estimated Market Value:</h2>
+        <h1 id="total-val">0.00 €</h1>
+        <div class="sell-methods">
+            <span id="quick-sell">Quick Sell: 0.00 €</span>
+            <span class="divider">|</span>
+            <span id="normal-sell">Normal Sell: 0.00 €</span>
+        </div>
+    </div>
+
+    <div class="affiliate-box">
+        <p>Want to sell or buy safely?</p>
+        <a href="https://www.eldorado.gg/" target="_blank" class="eldorado-btn">Visit Eldorado.gg</a>
+    </div>
+
+    <div class="disclaimer">
+        <p>This valuation is based on current marketplace trends. Our 0.8x safety multiplier is applied to ensure realistic estimations. We are not affiliated with Riot Games or Epic Games.</p>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
