@@ -17,38 +17,35 @@ function calculate() {
     if (currentGame === 'valorant') {
         const rankMult = getVal("rank");
         
-        // Skin Value (Market Average)
-        let skinValue = (getVal("select") * 7.5) + (getVal("deluxe") * 11) + 
-                        (getVal("premium") * 16) + (getVal("exclusive") * 22) + 
-                        (getVal("ultra") * 28) + (getVal("bp") * 4.5);
+        let skinValue = (getVal("select") * 7) + (getVal("deluxe") * 10) + 
+                        (getVal("premium") * 15) + (getVal("exclusive") * 20) + 
+                        (getVal("ultra") * 25) + (getVal("bp") * 4);
         
-        // Account Progress & Currency
-        let progressValue = (getVal("level") * 0.04) + (getVal("agents") * 0.4);
-        let walletValue = (getVal("vp") / 100 * 0.75) + (getVal("rp") * 0.08) + (getVal("kc") / 4000);
+        let progress = (getVal("level") * 0.03) + (getVal("agents") * 0.4);
+        let wallet = (getVal("vp") / 100 * 0.7) + (getVal("rp") * 0.07);
         
-        // Rare Item Checkbox Logic
         let rareItems = 0;
         document.querySelectorAll(".val-rare:checked").forEach(el => rareItems += Number(el.value));
 
-        baseValue = (skinValue * 0.42 + progressValue + walletValue + rareItems) * rankMult * regionMult;
+        // Applying rank and region multipliers
+        baseValue = (skinValue * 0.4 + progress + wallet + rareItems) * rankMult * regionMult;
         
     } else {
-        // Fortnite Pricing Logic
-        let lockerBase = (getVal("fn-skins") * 0.28) + (getVal("fn-axes") * 0.12) + (getVal("fn-emotes") * 0.05);
-        let currency = (getVal("fn-vbucks") / 100 * 0.62);
+        // Fortnite Pricing
+        let locker = (getVal("fn-skins") * 0.25) + (getVal("fn-axes") * 0.1) + (getVal("fn-emotes") * 0.05);
+        let currency = (getVal("fn-vbucks") / 100 * 0.6);
         
         let rareItems = 0;
         document.querySelectorAll(".fn-rare:checked").forEach(el => rareItems += Number(el.value));
 
-        baseValue = (lockerBase + currency + rareItems) * regionMult;
+        baseValue = (locker + currency + rareItems) * regionMult;
     }
 
     // Applying the 0.8x Safety Multiplier
     const finalVal = baseValue;
     const normalSell = (finalVal * 0.9) * 0.8;
-    const quickSell = (finalVal * 0.8) * 0.8;
+    const quickSell = (finalVal * 0.75) * 0.8;
 
-    // Displaying results
     document.getElementById("total-val").innerText = finalVal.toFixed(2) + " €";
     document.getElementById("quick-sell").innerText = "Quick Sell: " + quickSell.toFixed(2) + " €";
     document.getElementById("normal-sell").innerText = "Normal Sell: " + normalSell.toFixed(2) + " €";
