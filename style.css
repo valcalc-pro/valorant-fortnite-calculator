@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
 
 body {
-    background: #121b23; /* Darker background from image */
+    background: #121b23;
     color: #ece8e1;
     font-family: 'Rajdhani', sans-serif;
     margin: 0;
@@ -15,7 +15,7 @@ body {
     border-bottom: 2px solid #ff4655;
 }
 
-.header h1 { margin: 0; font-size: 2.5rem; letter-spacing: 2px; }
+.header h1 { margin: 0; font-size: 2.5rem; letter-spacing: 2px; color: #ff4655; }
 .header p { color: #8894a0; margin-top: 5px; }
 
 .game-switch {
@@ -119,8 +119,6 @@ input, select {
     transition: 0.2s;
 }
 
-.calc-btn:hover { background: #e63e4a; }
-
 #results-area {
     margin-top: 40px;
     text-align: center;
@@ -129,33 +127,25 @@ input, select {
     border: 1px dashed #ff4655;
 }
 
-#result-label { color: #8894a0; font-size: 1rem; margin-bottom: 5px; }
 #total-val { color: #ece8e1; font-size: 3rem; margin: 0; }
 
 .sell-methods {
     margin-top: 10px;
-    color: #ff4655; /* Reddish color from image */
+    color: #ff4655;
     font-weight: 700;
-    font-size: 1.1rem;
 }
-
-.divider { margin: 0 10px; color: #38444d; }
 
 .affiliate-box {
     margin-top: 40px;
     padding: 25px;
-    border: 1px solid #ce9e1d; /* Yellow border from image */
+    border: 1px solid #ce9e1d;
     text-align: center;
-    border-radius: 4px;
     background: rgba(206, 158, 29, 0.05);
 }
-
-.affiliate-box p { margin: 0 0 15px; color: #ce9e1d; font-weight: 600; }
 
 .eldorado-btn {
     display: inline-block;
     padding: 12px 40px;
-    background: transparent;
     border: 1px solid #ce9e1d;
     color: #ce9e1d;
     text-decoration: none;
@@ -165,10 +155,4 @@ input, select {
 
 .eldorado-btn:hover { background: #ce9e1d; color: black; }
 
-.disclaimer {
-    font-size: 0.75rem;
-    color: #55616c;
-    text-align: center;
-    margin-top: 30px;
-    line-height: 1.4;
-}
+.disclaimer { font-size: 0.75rem; color: #55616c; text-align: center; margin-top: 30px; }
