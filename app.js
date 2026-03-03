@@ -1,17 +1,11 @@
-function calculate() {
-    // Árak alapértékei (Euró) - VISSZAÁLLÍTVA AZ EREDETIRE
-    const prices = {
-        select: 5,       
-        deluxe: 8,       
-        premium: 12,
-        exclusive: 20,
-        ultra: 30,       
-        bp: 1.5,
-        vp_rate: 0.008,
-        agent_price: 1.5
-    };
+// Árfolyamok (2026-os becsült alap)
+const rates = { HUF: 405, USD: 1.08, EUR: 1 };
 
-    // Alapadatok beolvasása
+function calculate() {
+    const prices = { select: 5, deluxe: 8, premium: 12, exclusive: 20, ultra: 30, bp: 1.5, vp_rate: 0.008, agent_price: 1.5 };
+    const currency = document.getElementById('currency').value;
+    const symbol = currency === 'HUF' ? ' Ft' : (currency === 'USD' ? ' $' : ' €');
+
     let total = 0;
     const level = parseFloat(document.getElementById('level').value) || 0;
     const rankMult = parseFloat(document.getElementById('rank').value) || 1;
@@ -19,39 +13,38 @@ function calculate() {
     const vp = parseFloat(document.getElementById('vp').value) || 0;
     const regionMult = parseFloat(document.getElementById('region').value) || 1;
 
-    // Skin számítás
     total += (parseFloat(document.getElementById('select').value) || 0) * prices.select;
     total += (parseFloat(document.getElementById('deluxe').value) || 0) * prices.deluxe;
     total += (parseFloat(document.getElementById('premium').value) || 0) * prices.premium;
     total += (parseFloat(document.getElementById('exclusive').value) || 0) * prices.exclusive;
     total += (parseFloat(document.getElementById('ultra').value) || 0) * prices.ultra;
     total += (parseFloat(document.getElementById('bp').value) || 0) * prices.bp;
+    total += vp * prices.vp_rate + agents * prices.agent_price + (level * 0.05);
 
-    // VP, Ügynökök és Szint
-    total += vp * prices.vp_rate;
-    total += agents * prices.agent_price;
-    total += (level * 0.05);
+    document.querySelectorAll('.val-rare:checked').forEach(box => { total += parseFloat(box.value); });
 
-    // Ritka cuccok (checkboxok)
-    document.querySelectorAll('.val-rare:checked').forEach(box => {
-        total += parseFloat(box.value);
-    });
+    let baseValue = total * rankMult * regionMult * 0.8;
+    let finalValue = baseValue * rates[currency];
 
-    // Szorzók alkalmazása (Rank, Régió és a 0.8-as biztonsági szorzó)
-    let finalValue = total * rankMult * regionMult * 0.8;
+    document.getElementById('total-val').innerText = finalValue.toLocaleString() + symbol;
+    document.getElementById('quick-sell').innerText = "Quick Sell: " + (finalValue * 0.7).toLocaleString() + symbol;
+    document.getElementById('normal-sell').innerText = "Normal Sell: " + (finalValue * 1.1).toLocaleString() + symbol;
+}
 
-    // Eredmények kiírása
-    document.getElementById('total-val').innerText = finalValue.toFixed(2) + " €";
-    document.getElementById('quick-sell').innerText = "Quick Sell: " + (finalValue * 0.7).toFixed(2) + " €";
-    document.getElementById('normal-sell').innerText = "Normal Sell: " + (finalValue * 1.1).toFixed(2) + " €";
+function toggleTheme() { document.body.classList.toggle('light-mode'); }
+function toggleGuide() { 
+    const g = document.getElementById('skin-guide-content');
+    g.style.display = g.style.display === 'block' ? 'none' : 'block';
+}
+
+function shareResults() {
+    const val = document.getElementById('total-val').innerText;
+    const text = `My Valorant inventory is worth ${val} on ValCalc Pro! Check yours: ${window.location.href}`;
+    navigator.clipboard.writeText(text).then(() => alert("Result copied to clipboard!"));
 }
 
 function updateRankColor() {
-    const rankSelect = document.getElementById('rank');
-    const colors = {
-        "1": "#ffffff", "1.02": "#666666", "1.08": "#cd7f32", "1.15": "#c0c0c0",
-        "1.25": "#ffd700", "1.40": "#40e0d0", "1.65": "#b9f2ff", "2.10": "#4b0082",
-        "2.80": "#ff4444", "4.50": "#ffffaa"
-    };
-    rankSelect.style.color = colors[rankSelect.value] || "#fff";
+    const r = document.getElementById('rank');
+    const c = { "1": "#fff", "1.02": "#666", "1.08": "#cd7f32", "1.15": "#c0c0c0", "1.25": "#ffd700", "1.40": "#40e0d0", "1.65": "#b9f2ff", "2.10": "#4b0082", "2.80": "#ff4444", "4.50": "#ffffaa" };
+    r.style.color = c[r.value] || "#fff";
 }
