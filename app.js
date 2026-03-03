@@ -1,11 +1,11 @@
 function calculate() {
-    // Árak alapértékei (Euró)
+    // Árak alapértékei (Euró) - VISSZAÁLLÍTVA AZ EREDETIRE
     const prices = {
-        select: 5,
-        deluxe: 8,
+        select: 5,       
+        deluxe: 8,       
         premium: 12,
         exclusive: 20,
-        ultra: 30,
+        ultra: 30,       
         bp: 1.5,
         vp_rate: 0.008,
         agent_price: 1.5
@@ -27,7 +27,7 @@ function calculate() {
     total += (parseFloat(document.getElementById('ultra').value) || 0) * prices.ultra;
     total += (parseFloat(document.getElementById('bp').value) || 0) * prices.bp;
 
-    // VP és Ügynökök
+    // VP, Ügynökök és Szint
     total += vp * prices.vp_rate;
     total += agents * prices.agent_price;
     total += (level * 0.05);
