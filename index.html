@@ -21,6 +21,11 @@
         body { transition: background-color 0.3s, color 0.3s; }
         .mode-switch { position: absolute; top: 15px; right: 15px; cursor: pointer; padding: 8px 12px; background: rgba(255, 70, 85, 0.1); color: #ff4655; border-radius: 4px; border: 1px solid #ff4655; font-weight: bold; z-index: 100; }
         
+        /* Skin Tier Guide Stílus */
+        .skin-guide-btn { background: #1f2326; color: #ece8e1; padding: 10px; font-size: 0.85em; cursor: pointer; margin-bottom: 10px; display: block; border-radius: 4px; border: 1px solid #333; text-align: center; transition: 0.2s; }
+        .skin-guide-btn:hover { border-color: #ff4655; }
+        #skin-guide-content { display: none; background: #16191c; padding: 15px; font-size: 0.85em; border-left: 4px solid #ff4655; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        
         .img-gen-btn { background: #ff4655; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; text-transform: uppercase; }
         .share-btn { background: #00bcd4; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; }
         
@@ -31,7 +36,8 @@
         .light-mode .container { background: #ffffff !important; color: #0f1923 !important; }
         .light-mode #total-val { color: #0f1923 !important; }
         .light-mode .checkbox-group { background: #f0f0f0 !important; color: #111 !important; border: 1px solid #ccc; }
-        .light-mode .info-section { color: #333 !important; }
+        .light-mode .skin-guide-btn { background: #f5f5f5; color: #333; }
+        .light-mode #skin-guide-content { background: #f9f9f9; color: #333; }
     </style>
 </head>
 <body>
@@ -54,9 +60,9 @@
 
         <h2 class="section-title">Account Details</h2>
         <div class="input-grid">
-            <div><label>Level</label><input id="level" type="number" min="0" value="0"></div>
+            <div><label>Account Level</label><input id="level" type="number" min="0" value="0"></div>
             <div>
-                <label>Rank</label>
+                <label>Competitive Rank</label>
                 <select id="rank" onchange="updateRankColor()">
                     <option value="1">Unranked</option>
                     <option value="1.02">Iron</option>
@@ -72,14 +78,23 @@
             </div>
         </div>
 
-        <h2 class="section-title">Skin Inventory</h2>
+        <h2 class="section-title">Weapon Skin Inventory</h2>
+        <div class="skin-guide-btn" onclick="toggleGuide()">Skin Tier Guide</div>
+        <div id="skin-guide-content">
+            <p><b>Select:</b> Luxe, Prism, Smite, Galleria</p>
+            <p><b>Deluxe:</b> Aristocrat, Sakura, Wasteland, Minima</p>
+            <p><b>Premium:</b> Prime, Reaver, Oni, Sovereign, Forsaken</p>
+            <p><b>Exclusive:</b> RGX, Glitchpop, Singularity, Spectrum</p>
+            <p><b>Ultra:</b> Elderflame, Protocol, Radiant Entertainment</p>
+        </div>
+
         <div class="skin-grid">
-            <div><label>Select</label><input id="select" type="number" value="0"></div>
-            <div><label>Deluxe</label><input id="deluxe" type="number" value="0"></div>
-            <div><label>Premium</label><input id="premium" type="number" value="0"></div>
-            <div><label>Exclusive</label><input id="exclusive" type="number" value="0"></div>
-            <div><label>Ultra</label><input id="ultra" type="number" value="0"></div>
-            <div><label>BP Skins</label><input id="bp" type="number" value="0"></div>
+            <div><label>Select Edition</label><input id="select" type="number" value="0"></div>
+            <div><label>Deluxe Edition</label><input id="deluxe" type="number" value="0"></div>
+            <div><label>Premium Edition</label><input id="premium" type="number" value="0"></div>
+            <div><label>Exclusive Edition</label><input id="exclusive" type="number" value="0"></div>
+            <div><label>Ultra Edition</label><input id="ultra" type="number" value="0"></div>
+            <div><label>Battle Pass Skins</label><input id="bp" type="number" value="0"></div>
         </div>
         
         <h3>Rare Collectibles</h3>
@@ -102,14 +117,14 @@
     </div>
 
     <button class="img-gen-btn" onclick="generateShareImage()">📸 Download Share Card</button>
-    <button class="share-btn" onclick="shareResults()">🔗 Copy Link</button>
+    <button class="share-btn" onclick="shareResults()">🔗 Copy Text Link</button>
 
     <hr style="border: 0.5px solid #333; margin: 40px 0;">
     <div class="info-section" style="text-align: left; line-height: 1.6;">
         <h3>How to Calculate Your Valorant Inventory?</h3>
-        <p>Our calculator uses real-time market data to estimate the value of your skins. Simply enter the number of skins you own in each rarity tier.</p>
-        <h3 style="margin-top:20px;">Is it Safe?</h3>
-        <p>Yes! We do not require any login information. This is a manual calculator for estimation purposes only.</p>
+        <p>Our calculator uses market data to estimate the value of your skins. Enter the number of skins per rarity tier to see the estimated market price.</p>
+        <h3 style="margin-top:20px;">Safety and Privacy</h3>
+        <p>ValCalc Pro is 100% safe. We don't ask for your login details.</p>
     </div>
 
     <div class="affiliate-box" style="margin-top: 30px;">
@@ -119,4 +134,5 @@
 <script src="app.js"></script>
 </body>
 </html>
+
 
