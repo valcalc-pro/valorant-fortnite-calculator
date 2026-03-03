@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>ValCalc Pro | Valorant Inventory Value</title>
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DDLCLS8TS7"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -12,56 +17,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <title>ValCalc Pro | Valorant Inventory Value</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { transition: background-color 0.3s, color 0.3s; }
+        body { transition: background-color 0.3s, color 0.3s; margin: 0; padding: 0; font-family: sans-serif; }
         .mode-switch { position: absolute; top: 15px; right: 15px; cursor: pointer; padding: 8px 12px; background: rgba(255, 70, 85, 0.1); color: #ff4655; border-radius: 4px; border: 1px solid #ff4655; font-weight: bold; z-index: 100; }
         
         .skin-guide-btn { background: #1f2326; color: #ece8e1; padding: 10px; font-size: 0.85em; cursor: pointer; margin-bottom: 10px; display: block; border-radius: 4px; border: 1px solid #333; text-align: center; }
-        #skin-guide-content { display: none; background: #16191c; padding: 15px; font-size: 0.85em; border-left: 4px solid #ff4655; margin-bottom: 20px; border-radius: 0 4px 4px 0; }
+        #skin-guide-content { display: none; background: #16191c; padding: 15px; font-size: 0.85em; border-left: 4px solid #ff4655; margin-bottom: 20px; color: #eee; }
         
         .img-gen-btn { background: #ff4655; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; text-transform: uppercase; }
         .share-btn { background: #00bcd4; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; }
         
-        #results-area { padding: 30px; border-radius: 12px; background: #1f2326; border: 2px solid #ff4655; position: relative; margin-top: 20px; text-align: center; }
-        #qr-container { background: white; padding: 5px; border-radius: 4px; display: none; margin: 15px auto; width: 80px; }
+        #results-area { padding: 30px; border-radius: 12px; background: #1f2326; border: 2px solid #ff4655; position: relative; margin-top: 20px; text-align: center; color: white; }
+        #qr-container { background: white; padding: 5px; border-radius: 4px; display: none; margin: 15px auto; width: 80px; height: 80px; }
         
+        /* Light Mode fix */
         .light-mode { background-color: #ece8e1 !important; color: #0f1923 !important; }
         .light-mode .container { background: #ffffff !important; color: #0f1923 !important; }
-        .light-mode #total-val { color: #0f1923 !important; }
+        .light-mode #total-val, .light-mode h2, .light-mode h3 { color: #0f1923 !important; }
         .light-mode .checkbox-group { background: #f0f0f0 !important; color: #111 !important; border: 1px solid #ccc; }
-        .light-mode .skin-guide-btn { background: #f5f5f5; color: #333; }
-        .light-mode #skin-guide-content { background: #f9f9f9; color: #333; }
     </style>
 </head>
 <body>
 
 <button class="mode-switch" onclick="toggleTheme()">MODE</button>
 
-<div class="header">
-    <h1>VALORANT INVENTORY CALCULATOR</h1>
-    <p>Professional Valuation Tool for Agents</p>
+<div class="header" style="text-align: center; padding: 40px 20px;">
+    <h1 style="color: #ff4655; margin: 0;">VALORANT INVENTORY CALCULATOR</h1>
+    <p style="color: #666;">Estimate your account's market value</p>
 </div>
 
-<div class="container">
+<div class="container" style="max-width: 600px; margin: 0 auto; padding: 20px;">
     <div id="valorant-calc">
-        <label>Display Currency</label>
-        <select id="currency" onchange="calculate()" style="width:100%; padding:10px; background:#0f1923; color:white; border:1px solid #333; margin-bottom:20px;">
+        <label>Currency</label>
+        <select id="currency" onchange="calculate()" style="width:100%; padding:10px; background:#0f1923; color:white; border:1px solid #333; margin-bottom:20px; border-radius:4px;">
             <option value="EUR">EUR (€)</option>
             <option value="HUF">HUF (Ft)</option>
             <option value="USD">USD ($)</option>
         </select>
 
-        <h2 class="section-title">Account Details</h2>
-        <div class="input-grid">
-            <div><label>Account Level</label><input id="level" type="number" min="0" value="0" oninput="calculate()"></div>
+        <h2 class="section-title">Account Info</h2>
+        <div class="input-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+            <div><label>Level</label><input id="level" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
             <div>
-                <label>Competitive Rank</label>
-                <select id="rank" onchange="calculate()">
+                <label>Rank</label>
+                <select id="rank" onchange="calculate()" style="width:100%; padding:8px;">
                     <option value="1">Unranked</option>
                     <option value="1.02">Iron</option>
                     <option value="1.08">Bronze</option>
@@ -76,61 +76,53 @@
             </div>
         </div>
 
-        <h2 class="section-title">Weapon Skin Inventory</h2>
-        <div class="skin-guide-btn" onclick="toggleGuide()">Skin Tier Guide</div>
+        <h2 class="section-title">Skins</h2>
+        <div class="skin-guide-btn" onclick="toggleGuide()">Skin Tier Guide (Click)</div>
         <div id="skin-guide-content">
-            <p><b>Select:</b> Luxe, Prism, Smite, Galleria</p>
-            <p><b>Deluxe:</b> Aristocrat, Sakura, Wasteland, Minima</p>
-            <p><b>Premium:</b> Prime, Reaver, Oni, Sovereign, Forsaken</p>
-            <p><b>Exclusive:</b> RGX, Glitchpop, Singularity, Spectrum</p>
-            <p><b>Ultra:</b> Elderflame, Protocol, Radiant Entertainment</p>
+            <p><b>Select:</b> Luxe, Prism | <b>Deluxe:</b> Sakura | <b>Premium:</b> Prime, Reaver | <b>Exclusive:</b> RGX | <b>Ultra:</b> Protocol</p>
         </div>
 
-        <div class="skin-grid">
-            <div><label>Select</label><input id="select" type="number" value="0" oninput="calculate()"></div>
-            <div><label>Deluxe</label><input id="deluxe" type="number" value="0" oninput="calculate()"></div>
-            <div><label>Premium</label><input id="premium" type="number" value="0" oninput="calculate()"></div>
-            <div><label>Exclusive</label><input id="exclusive" type="number" value="0" oninput="calculate()"></div>
-            <div><label>Ultra</label><input id="ultra" type="number" value="0" oninput="calculate()"></div>
-            <div><label>Battle Pass</label><input id="bp" type="number" value="0" oninput="calculate()"></div>
+        <div class="skin-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+            <div><label>Select</label><input id="select" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
+            <div><label>Deluxe</label><input id="deluxe" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
+            <div><label>Premium</label><input id="premium" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
+            <div><label>Exclusive</label><input id="exclusive" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
+            <div><label>Ultra</label><input id="ultra" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
+            <div><label>BP Skins</label><input id="bp" type="number" value="0" oninput="calculate()" style="width:100%; padding:8px;"></div>
         </div>
         
-        <h3>Rare Collectibles</h3>
-        <div class="checkbox-group" style="padding: 15px; border-radius: 4px; background: #1f2326; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <h3>Rares</h3>
+        <div class="checkbox-group" style="padding: 15px; background: #1f2326; border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; color: white;">
             <label><input type="checkbox" value="50" class="val-rare" onchange="calculate()"> Riot Buddy</label>
-            <label><input type="checkbox" value="40" class="val-rare" onchange="calculate()"> Arcane Sheriff</label>
-            <label><input type="checkbox" value="35" class="val-rare" onchange="calculate()"> Champ 2021</label>
-            <label><input type="checkbox" value="35" class="val-rare" onchange="calculate()"> Champ 2022</label>
+            <label><input type="checkbox" value="40" class="val-rare" onchange="calculate()"> Arcane</label>
+            <label><input type="checkbox" value="35" class="val-rare" onchange="calculate()"> Champ 21</label>
+            <label><input type="checkbox" value="35" class="val-rare" onchange="calculate()"> Champ 22</label>
         </div>
     </div>
 
-    <button type="button" onclick="calculate()" class="calc-btn">CALCULATE VALUE</button>
+    <button onclick="calculate()" class="calc-btn" style="width: 100%; padding: 15px; background: #ff4655; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;">CALCULATE</button>
 
     <div id="results-area">
-        <div style="font-weight: bold; color: #ff4655; text-transform: uppercase;">ValCalc Pro Result</div>
+        <div style="font-weight: bold; color: #ff4655; letter-spacing: 1px;">ESTIMATED VALUE</div>
         <h1 id="total-val" style="font-size: 3em; margin: 10px 0;">0.00 €</h1>
-        <div id="quick-sell" style="color: #ff4655;">Quick Sell: 0.00 €</div>
+        <div id="quick-sell" style="color: #aaa;">Quick Sell: 0.00 €</div>
         <div id="normal-sell" style="color: #00bcd4;">Normal Sell: 0.00 €</div>
         <div id="qr-container"></div>
     </div>
 
-    <button class="img-gen-btn" onclick="generateShareImage()">📸 Download Share Card</button>
-    <button class="share-btn" onclick="shareResults()">🔗 Copy Text Result</button>
+    <button class="img-gen-btn" onclick="generateShareImage()">📸 Download Image</button>
+    <button class="share-btn" onclick="shareResults()">🔗 Copy Text Link</button>
 
     <hr style="border: 0.5px solid #333; margin: 40px 0;">
-    <div class="info-section" style="text-align: left; line-height: 1.6;">
-        <h3>How to Calculate Your Valorant Inventory?</h3>
-        <p>Our calculator uses manual rarity tiers to estimate value. Simply fill in the numbers based on your in-game collection.</p>
-        <h3 style="margin-top:20px;">Safe & Secure</h3>
-        <p>We do not use Riot API or login forms. Your data remains private and is never stored on our servers.</p>
-    </div>
-
-    <div class="affiliate-box" style="margin-top: 30px;">
-        <a href="https://www.eldorado.gg/" target="_blank" class="eldorado-btn" style="display:block; text-align:center; padding:15px; background:#111; color:#ff4655; border:1px solid #ff4655; text-decoration:none; border-radius:4px; font-weight:bold;">Check Prices on Eldorado.gg</a>
+    <div class="info-section" style="font-size: 0.9em; line-height: 1.6; color: #888;">
+        <h3>How it works</h3>
+        <p>This tool calculates the value of your Valorant account based on skin rarity, rank, and level. It's a manual estimator, meaning we don't need your login info.</p>
     </div>
 </div>
+
 <script src="app.js"></script>
 </body>
 </html>
+
 
 
