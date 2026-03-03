@@ -1,4 +1,3 @@
-// Árfolyamok (2026-os becsült alap)
 const rates = { HUF: 405, USD: 1.08, EUR: 1 };
 
 function calculate() {
@@ -9,9 +8,6 @@ function calculate() {
     let total = 0;
     const level = parseFloat(document.getElementById('level').value) || 0;
     const rankMult = parseFloat(document.getElementById('rank').value) || 1;
-    const agents = parseFloat(document.getElementById('agents').value) || 0;
-    const vp = parseFloat(document.getElementById('vp').value) || 0;
-    const regionMult = parseFloat(document.getElementById('region').value) || 1;
 
     total += (parseFloat(document.getElementById('select').value) || 0) * prices.select;
     total += (parseFloat(document.getElementById('deluxe').value) || 0) * prices.deluxe;
@@ -19,16 +15,52 @@ function calculate() {
     total += (parseFloat(document.getElementById('exclusive').value) || 0) * prices.exclusive;
     total += (parseFloat(document.getElementById('ultra').value) || 0) * prices.ultra;
     total += (parseFloat(document.getElementById('bp').value) || 0) * prices.bp;
-    total += vp * prices.vp_rate + agents * prices.agent_price + (level * 0.05);
+    total += (level * 0.05);
 
     document.querySelectorAll('.val-rare:checked').forEach(box => { total += parseFloat(box.value); });
 
-    let baseValue = total * rankMult * regionMult * 0.8;
-    let finalValue = baseValue * rates[currency];
+    let finalValue = total * rankMult * 0.8 * rates[currency];
 
-    document.getElementById('total-val').innerText = finalValue.toLocaleString() + symbol;
-    document.getElementById('quick-sell').innerText = "Quick Sell: " + (finalValue * 0.7).toLocaleString() + symbol;
-    document.getElementById('normal-sell').innerText = "Normal Sell: " + (finalValue * 1.1).toLocaleString() + symbol;
+    document.getElementById('total-val').innerText = finalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + symbol;
+    document.getElementById('quick-sell').innerText = "Quick Sell: " + (finalValue * 0.7).toLocaleString(undefined, {maximumFractionDigits: 0}) + symbol;
+    document.getElementById('normal-sell').innerText = "Normal Sell: " + (finalValue * 1.1).toLocaleString(undefined, {maximumFractionDigits: 0}) + symbol;
+}
+
+// QR KÓD ÉS KÉP GENERÁLÁS
+function generateShareImage() {
+    const qrContainer = document.getElementById('qr-container');
+    const watermark = document.getElementById('watermark');
+    
+    // Előző QR kód törlése és új generálása
+    qrContainer.innerHTML = "";
+    new QRCode(qrContainer, {
+        text: window.location.href,
+        width: 80,
+        height: 80,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    // Elemek megjelenítése a képhez
+    qrContainer.style.display = "block";
+    watermark.style.display = "block";
+
+    const element = document.getElementById('results-area');
+    
+    html2canvas(element, {
+        backgroundColor: "#1f2326",
+        scale: 2
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'valcalc-pro-inventory.png';
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        
+        // Letöltés után újra elrejtjük a weboldalon
+        qrContainer.style.display = "none";
+        watermark.style.display = "none";
+    });
 }
 
 function toggleTheme() { document.body.classList.toggle('light-mode'); }
@@ -39,8 +71,8 @@ function toggleGuide() {
 
 function shareResults() {
     const val = document.getElementById('total-val').innerText;
-    const text = `My Valorant inventory is worth ${val} on ValCalc Pro! Check yours: ${window.location.href}`;
-    navigator.clipboard.writeText(text).then(() => alert("Result copied to clipboard!"));
+    const text = `My Valorant inventory is worth ${val}! Calculate yours: ${window.location.href}`;
+    navigator.clipboard.writeText(text).then(() => alert("Text link copied!"));
 }
 
 function updateRankColor() {
