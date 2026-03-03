@@ -8,17 +8,47 @@
       gtag('js', new Date());
       gtag('config', 'G-DDLCLS8TS7');
     </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
-    
-    <title>Valorant Inventory Calculator | ValCalc Pro</title>
-    <meta name="description" content="Calculate the market value of your Valorant account instantly. Professional skin and rank valuation.">
-
+    <title>ValCalc Pro | Valorant Inventory Value</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- ALAP STÍLUSOK ÉS JAVÍTÁSOK --- */
+        body { transition: background-color 0.3s, color 0.3s; }
+        .mode-switch { position: absolute; top: 15px; right: 15px; cursor: pointer; padding: 8px 12px; background: rgba(255, 70, 85, 0.1); color: #ff4655; border-radius: 4px; border: 1px solid #ff4655; font-weight: bold; z-index: 100; }
+        
+        .skin-guide-btn { background: #1f2326; color: #ece8e1; padding: 10px; font-size: 0.85em; cursor: pointer; margin-bottom: 10px; display: block; border-radius: 4px; border: 1px solid #333; text-align: center; }
+        #skin-guide-content { display: none; background: #16191c; padding: 15px; font-size: 0.85em; border-left: 4px solid #ff4655; margin-bottom: 20px; }
+        
+        .share-btn { background: #00bcd4; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; text-transform: uppercase; }
+        .currency-select { margin-bottom: 20px; padding: 10px; width: 100%; background: #0f1923; color: #fff; border: 1px solid #333; border-radius: 4px; }
+
+        /* --- LIGHT MODE JAVÍTÁSOK (HOGY MINDEN LÁTSZÓDJON) --- */
+        .light-mode { background-color: #ece8e1 !important; color: #0f1923 !important; }
+        .light-mode .container { background: #ffffff !important; color: #0f1923 !important; }
+        
+        /* Eredményjelző szövegek (image_70a676 javítása) */
+        .light-mode #total-val { color: #0f1923 !important; }
+        .light-mode #result-label { color: #333 !important; }
+        .light-mode .sell-methods { color: #555 !important; }
+        
+        /* Rare Collectibles szövegek (image_70a1fc javítása) */
+        .light-mode .checkbox-group { background: #f0f0f0 !important; color: #111111 !important; border: 1px solid #ccc; }
+        .light-mode .checkbox-group label { color: #111111 !important; }
+        
+        /* Egyéb elemek */
+        .light-mode input, .light-mode select { background: #f5f5f5 !important; color: #0f1923 !important; border: 1px solid #ccc !important; }
+        .light-mode .skin-guide-btn { background: #f5f5f5; color: #333; border: 1px solid #ccc; }
+        .light-mode #skin-guide-content { background: #f9f9f9; color: #333; }
+        .light-mode .info-section h3 { color: #ff4655 !important; }
+        .light-mode .info-section p { color: #444 !important; }
+        .light-mode .section-title { color: #ff4655 !important; border-bottom: 2px solid #ff4655; }
+    </style>
 </head>
 <body>
+
+<button class="mode-switch" onclick="toggleTheme()">MODE</button>
 
 <div class="header">
     <h1>VALORANT INVENTORY CALCULATOR</h1>
@@ -27,12 +57,16 @@
 
 <div class="container">
     <div id="valorant-calc">
+        <label>Display Currency</label>
+        <select id="currency" class="currency-select" onchange="calculate()">
+            <option value="EUR">EUR (€)</option>
+            <option value="HUF">HUF (Ft)</option>
+            <option value="USD">USD ($)</option>
+        </select>
+
         <h2 class="section-title">Account Details</h2>
         <div class="input-grid">
-            <div>
-                <label>Account Level</label>
-                <input id="level" type="number" min="0" value="0">
-            </div>
+            <div><label>Account Level</label><input id="level" type="number" min="0" value="0"></div>
             <div>
                 <label>Competitive Rank</label>
                 <select id="rank" onchange="updateRankColor()">
@@ -56,6 +90,15 @@
         </div>
 
         <h2 class="section-title">Weapon Skin Inventory</h2>
+        <div class="skin-guide-btn" onclick="toggleGuide()">Skin Tier Guide</div>
+        <div id="skin-guide-content">
+            <p><b>Select:</b> Luxe, Prism, Smite, Galleria</p>
+            <p><b>Deluxe:</b> Aristocrat, Sakura, Wasteland, Minima</p>
+            <p><b>Premium:</b> Prime, Reaver, Oni, Sovereign, Forsaken</p>
+            <p><b>Exclusive:</b> RGX 11z Pro, Glitchpop, Singularity, Spectrum</p>
+            <p><b>Ultra:</b> Elderflame, Protocol 781-A, Radiant Entertainment</p>
+        </div>
+
         <div class="skin-grid">
             <div><label>Select Edition</label><input id="select" type="number" value="0"></div>
             <div><label>Deluxe Edition</label><input id="deluxe" type="number" value="0"></div>
@@ -66,7 +109,7 @@
         </div>
         
         <h3>Rare Collectibles</h3>
-        <div class="checkbox-group">
+        <div class="checkbox-group" style="padding: 15px; border-radius: 4px; background: #1f2326; margin-bottom: 20px;">
             <label><input type="checkbox" value="50" class="val-rare"> Riot Gun Buddy</label>
             <label><input type="checkbox" value="40" class="val-rare"> Arcane Sheriff</label>
             <label><input type="checkbox" value="35" class="val-rare"> Champions 2021 Vandal</label>
@@ -75,7 +118,7 @@
     </div>
 
     <label>Account Region</label>
-    <select id="region">
+    <select id="region" class="currency-select">
         <option value="1">Global / Europe / NA (1.0x)</option>
         <option value="0.75">Turkey / Brazil / Asia (0.75x)</option>
     </select>
@@ -90,25 +133,23 @@
             <span class="divider">|</span>
             <span id="normal-sell">Normal Sell: 0.00 €</span>
         </div>
+        <button class="share-btn" onclick="shareResults()">Copy Result to Clipboard</button>
     </div>
 
     <hr style="border: 0.5px solid #333; margin: 40px 0;">
-    <div class="info-section" style="text-align: left; color: #ccc; font-size: 0.9em; line-height: 1.6;">
-        <h3 style="color: #fff;">1. How Our Valorant Calculator Works</h3>
-        <p>Our tool evaluates your weapon skins based on official editions and rarity. We add value for limited items like Arcane Sheriff or Champions bundles, factored with your rank and account level.</p>
-
-        <h3 style="color: #fff; margin-top: 20px;">2. Why Use ValCalc Pro?</h3>
-        <p>We apply a 0.8x safety multiplier to keep your pricing realistic. We provide Quick Sell, Market Value, and Normal Sell price points to help you decide the best strategy.</p>
-
-        <h3 style="color: #fff; margin-top: 20px;">3. Privacy and Safety First</h3>
-        <p>ValCalc Pro is 100% safe. We never ask for your login credentials. It's a manual input tool that protects your account while providing professional valuation.</p>
+    <div class="info-section" style="text-align: left; line-height: 1.6;">
+        <h3>1. How Our Valorant Calculator Works</h3>
+        <p>Our tool evaluates your weapon skins based on official editions and rarity.</p>
+        <h3>2. Why Use ValCalc Pro?</h3>
+        <p>We apply safety multipliers to keep pricing realistic for marketplaces.</p>
+        <h3>3. Privacy and Safety First</h3>
+        <p>ValCalc Pro is 100% safe. We never ask for your login credentials.</p>
     </div>
 
     <div class="affiliate-box" style="margin-top: 30px;">
         <a href="https://www.eldorado.gg/" target="_blank" class="eldorado-btn">Check Prices on Eldorado.gg</a>
     </div>
 </div>
-
 <script src="app.js"></script>
 </body>
 </html>
