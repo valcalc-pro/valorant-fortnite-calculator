@@ -1,63 +1,57 @@
-let currentGame = 'valorant';
-
-function switchGame(game) {
-    currentGame = game;
-    document.getElementById('valorant-calc').style.display = game === 'valorant' ? 'block' : 'none';
-    document.getElementById('fortnite-calc').style.display = game === 'fortnite' ? 'block' : 'none';
-    
-    document.getElementById('btn-val').classList.toggle('active', game === 'valorant');
-    document.getElementById('btn-fn').classList.toggle('active', game === 'fortnite');
-}
-
 function calculate() {
-    const getVal = (id) => Number(document.getElementById(id).value) || 0;
-    let baseValue = 0;
-    const regionMult = getVal("region");
+    // Árak alapértékei (Euró)
+    const prices = {
+        select: 5,
+        deluxe: 8,
+        premium: 12,
+        exclusive: 20,
+        ultra: 30,
+        bp: 1.5,
+        vp_rate: 0.008,
+        agent_price: 1.5
+    };
 
-    if (currentGame === 'valorant') {
-        const rankMult = getVal("rank");
-        
-        let skinValue = (getVal("select") * 7) + (getVal("deluxe") * 10) + 
-                        (getVal("premium") * 15) + (getVal("exclusive") * 20) + 
-                        (getVal("ultra") * 25) + (getVal("bp") * 4);
-        
-        let progress = (getVal("level") * 0.03) + (getVal("agents") * 0.4);
-        let wallet = (getVal("vp") / 100 * 0.7) + (getVal("rp") * 0.07);
-        
-        let rareItems = 0;
-        document.querySelectorAll(".val-rare:checked").forEach(el => rareItems += Number(el.value));
+    // Alapadatok beolvasása
+    let total = 0;
+    const level = parseFloat(document.getElementById('level').value) || 0;
+    const rankMult = parseFloat(document.getElementById('rank').value) || 1;
+    const agents = parseFloat(document.getElementById('agents').value) || 0;
+    const vp = parseFloat(document.getElementById('vp').value) || 0;
+    const regionMult = parseFloat(document.getElementById('region').value) || 1;
 
-        // Applying rank and region multipliers
-        baseValue = (skinValue * 0.4 + progress + wallet + rareItems) * rankMult * regionMult;
-        
-    } else {
-        // Fortnite Pricing
-        let locker = (getVal("fn-skins") * 0.25) + (getVal("fn-axes") * 0.1) + (getVal("fn-emotes") * 0.05);
-        let currency = (getVal("fn-vbucks") / 100 * 0.6);
-        
-        let rareItems = 0;
-        document.querySelectorAll(".fn-rare:checked").forEach(el => rareItems += Number(el.value));
+    // Skin számítás
+    total += (parseFloat(document.getElementById('select').value) || 0) * prices.select;
+    total += (parseFloat(document.getElementById('deluxe').value) || 0) * prices.deluxe;
+    total += (parseFloat(document.getElementById('premium').value) || 0) * prices.premium;
+    total += (parseFloat(document.getElementById('exclusive').value) || 0) * prices.exclusive;
+    total += (parseFloat(document.getElementById('ultra').value) || 0) * prices.ultra;
+    total += (parseFloat(document.getElementById('bp').value) || 0) * prices.bp;
 
-        baseValue = (locker + currency + rareItems) * regionMult;
-    }
+    // VP és Ügynökök
+    total += vp * prices.vp_rate;
+    total += agents * prices.agent_price;
+    total += (level * 0.05);
 
-    // Applying the 0.8x Safety Multiplier
-    const finalVal = baseValue;
-    const normalSell = (finalVal * 0.9) * 0.8;
-    const quickSell = (finalVal * 0.75) * 0.8;
+    // Ritka cuccok (checkboxok)
+    document.querySelectorAll('.val-rare:checked').forEach(box => {
+        total += parseFloat(box.value);
+    });
 
-    document.getElementById("total-val").innerText = finalVal.toFixed(2) + " €";
-    document.getElementById("quick-sell").innerText = "Quick Sell: " + quickSell.toFixed(2) + " €";
-    document.getElementById("normal-sell").innerText = "Normal Sell: " + normalSell.toFixed(2) + " €";
+    // Szorzók alkalmazása (Rank, Régió és a 0.8-as biztonsági szorzó)
+    let finalValue = total * rankMult * regionMult * 0.8;
+
+    // Eredmények kiírása
+    document.getElementById('total-val').innerText = finalValue.toFixed(2) + " €";
+    document.getElementById('quick-sell').innerText = "Quick Sell: " + (finalValue * 0.7).toFixed(2) + " €";
+    document.getElementById('normal-sell').innerText = "Normal Sell: " + (finalValue * 1.1).toFixed(2) + " €";
 }
 
 function updateRankColor() {
-    const select = document.getElementById("rank");
-    const colors = { 
-        "Iron": "#7a7a7a", "Bronze": "#cd7f32", "Silver": "#c0c0c0", 
-        "Gold": "#ffd700", "Platinum": "#00ffff", "Diamond": "#4ee1ff", 
-        "Ascendant": "#4b0082", "Immortal": "#ff0055", "Radiant": "#ffff00" 
+    const rankSelect = document.getElementById('rank');
+    const colors = {
+        "1": "#ffffff", "1.02": "#666666", "1.08": "#cd7f32", "1.15": "#c0c0c0",
+        "1.25": "#ffd700", "1.40": "#40e0d0", "1.65": "#b9f2ff", "2.10": "#4b0082",
+        "2.80": "#ff4444", "4.50": "#ffffaa"
     };
-    const rankName = select.options[select.selectedIndex].text.split(' ')[0];
-    select.style.borderColor = colors[rankName] || "#ff4655";
+    rankSelect.style.color = colors[rankSelect.value] || "#fff";
 }
