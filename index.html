@@ -18,46 +18,20 @@
     <title>ValCalc Pro | Valorant Inventory Value</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { transition: background-color 0.3s, color 0.3s; font-family: 'Segoe UI', sans-serif; }
+        body { transition: background-color 0.3s, color 0.3s; }
         .mode-switch { position: absolute; top: 15px; right: 15px; cursor: pointer; padding: 8px 12px; background: rgba(255, 70, 85, 0.1); color: #ff4655; border-radius: 4px; border: 1px solid #ff4655; font-weight: bold; z-index: 100; }
         
-        .skin-guide-btn { background: #1f2326; color: #ece8e1; padding: 10px; font-size: 0.85em; cursor: pointer; margin-bottom: 10px; display: block; border-radius: 4px; border: 1px solid #333; text-align: center; }
-        #skin-guide-content { display: none; background: #16191c; padding: 15px; font-size: 0.85em; border-left: 4px solid #ff4655; margin-bottom: 20px; }
-        
-        .img-gen-btn { background: #ff4655; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; text-transform: uppercase; font-size: 1.1em; }
+        .img-gen-btn { background: #ff4655; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; margin-top: 15px; width: 100%; font-weight: bold; text-transform: uppercase; }
         .share-btn { background: #00bcd4; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; }
         
-        .currency-select { margin-bottom: 20px; padding: 10px; width: 100%; background: #0f1923; color: #fff; border: 1px solid #333; border-radius: 4px; }
-
-        /* --- VIZUÁLIS KÁRTYA STÍLUSA --- */
-        #results-area { 
-            padding: 30px; 
-            border-radius: 12px; 
-            background: #1f2326; 
-            border: 2px solid #ff4655; 
-            position: relative;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-        #total-val { font-size: 3.5em; margin: 15px 0; color: #fff; text-shadow: 0 0 10px rgba(255, 70, 85, 0.5); }
-        .sell-methods { font-size: 1em; color: #ccc; }
+        #results-area { padding: 30px; border-radius: 12px; background: #1f2326; border: 2px solid #ff4655; position: relative; margin-top: 20px; text-align: center; }
+        #qr-container { background: white; padding: 5px; border-radius: 4px; display: inline-block; margin-top: 15px; display: none; }
         
-        /* QR kód pozíciója a képen */
-        #qr-container { 
-            position: absolute; 
-            bottom: 15px; 
-            right: 15px; 
-            background: white; 
-            padding: 5px; 
-            border-radius: 4px; 
-            display: none; /* Alapból nem látszik, csak a képen */
-        }
-
-        /* LIGHT MODE JAVÍTÁSOK */
         .light-mode { background-color: #ece8e1 !important; color: #0f1923 !important; }
         .light-mode .container { background: #ffffff !important; color: #0f1923 !important; }
         .light-mode #total-val { color: #0f1923 !important; }
-        .light-mode .checkbox-group { background: #f0f0f0 !important; border: 1px solid #ccc; }
+        .light-mode .checkbox-group { background: #f0f0f0 !important; color: #111 !important; border: 1px solid #ccc; }
+        .light-mode .info-section { color: #333 !important; }
     </style>
 </head>
 <body>
@@ -72,7 +46,7 @@
 <div class="container">
     <div id="valorant-calc">
         <label>Display Currency</label>
-        <select id="currency" class="currency-select" onchange="calculate()">
+        <select id="currency" class="currency-select" onchange="calculate()" style="width:100%; padding:10px; background:#0f1923; color:white; border:1px solid #333; margin-bottom:20px;">
             <option value="EUR">EUR (€)</option>
             <option value="HUF">HUF (Ft)</option>
             <option value="USD">USD ($)</option>
@@ -99,11 +73,6 @@
         </div>
 
         <h2 class="section-title">Skin Inventory</h2>
-        <div class="skin-guide-btn" onclick="toggleGuide()">Skin Tier Guide</div>
-        <div id="skin-guide-content">
-            <p><b>Select:</b> Luxe, Prism | <b>Deluxe:</b> Sakura | <b>Premium:</b> Prime, Reaver | <b>Exclusive:</b> RGX | <b>Ultra:</b> Protocol</p>
-        </div>
-
         <div class="skin-grid">
             <div><label>Select</label><input id="select" type="number" value="0"></div>
             <div><label>Deluxe</label><input id="deluxe" type="number" value="0"></div>
@@ -125,27 +94,29 @@
     <button onclick="calculate()" class="calc-btn">CALCULATE VALUE</button>
 
     <div id="results-area">
-        <div style="font-weight: bold; color: #ff4655; text-transform: uppercase; letter-spacing: 2px;">ValCalc Pro Result</div>
-        <h2 id="result-label" style="margin-top: 10px;">Estimated Market Value:</h2>
-        <h1 id="total-val">0.00 €</h1>
-        <div class="sell-methods">
-            <span id="quick-sell" style="color: #ff4655; font-weight: bold;">Quick Sell: 0.00 €</span>
-            <span style="margin: 0 10px; color: #444;">|</span>
-            <span id="normal-sell" style="color: #00bcd4; font-weight: bold;">Normal Sell: 0.00 €</span>
-        </div>
-        
+        <div style="font-weight: bold; color: #ff4655;">ValCalc Pro Result</div>
+        <h1 id="total-val" style="font-size: 3em; margin: 10px 0;">0.00 €</h1>
+        <div id="quick-sell" style="color: #ff4655;">Quick Sell: 0.00 €</div>
+        <div id="normal-sell" style="color: #00bcd4;">Normal Sell: 0.00 €</div>
         <div id="qr-container"></div>
-        <div id="watermark" style="position: absolute; bottom: 10px; left: 15px; font-size: 0.7em; color: #555; display: none;">valcalc-pro.github.io</div>
     </div>
 
     <button class="img-gen-btn" onclick="generateShareImage()">📸 Download Share Card</button>
-    <button class="share-btn" onclick="shareResults()">🔗 Copy Text Link</button>
+    <button class="share-btn" onclick="shareResults()">🔗 Copy Link</button>
+
+    <hr style="border: 0.5px solid #333; margin: 40px 0;">
+    <div class="info-section" style="text-align: left; line-height: 1.6;">
+        <h3>How to Calculate Your Valorant Inventory?</h3>
+        <p>Our calculator uses real-time market data to estimate the value of your skins. Simply enter the number of skins you own in each rarity tier.</p>
+        <h3 style="margin-top:20px;">Is it Safe?</h3>
+        <p>Yes! We do not require any login information. This is a manual calculator for estimation purposes only.</p>
+    </div>
 
     <div class="affiliate-box" style="margin-top: 30px;">
         <a href="https://www.eldorado.gg/" target="_blank" class="eldorado-btn">Check Prices on Eldorado.gg</a>
     </div>
 </div>
-
 <script src="app.js"></script>
 </body>
 </html>
+
